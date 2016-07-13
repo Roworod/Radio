@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static junit.Assert.*;
 import org.junit.Test;
 
 public class Test {
