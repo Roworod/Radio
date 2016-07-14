@@ -15,11 +15,21 @@ public class GUI{
 	private JButton btnOn, btnFm, btnGuardar, btnSubir, btnBajar;
 	private JTextField txtFrecuenciaActual;
 	private JComboBox cbxFrecuencias;
+	private boolean a;
+	private Double[] frecuencia;
+	private JList miLista;
 
+	DefaultListModel lstModelActividades=new DefaultListModel();
+
+
+	private Carro miCarro= new Carro();
 	Listener miListener= new Listener();
-	
 	public GUI(){
+		a=miCarro.getEncendido();
 		initialize();
+		for (int i=0;i<13;i++){
+			frecuencia[i]=0.0;
+		}
 	}
 
 	public void initialize(){
@@ -47,7 +57,8 @@ public class GUI{
 		pnlBienvenida.add(btnFm);
 
 		txtFrecuenciaActual= new JTextField();
-		txtFrecuenciaActual.setText("unabled");
+		txtFrecuenciaActual.setText("89.7");
+		txtFrecuenciaActual.setEditable(false);
 		txtFrecuenciaActual.setBounds(100,10,200,20);
 		txtFrecuenciaActual.setVisible(true);
 		pnlBienvenida.add(txtFrecuenciaActual);
@@ -71,24 +82,49 @@ public class GUI{
 			cbxFrecuencias.addItem(i);
 		pnlBienvenida.add(cbxFrecuencias);
 
+		btnGuardar=new JButton("Guardar");
+		btnGuardar.setBounds(10,200,75,30);
+		btnGuardar.addActionListener(miListener);
+		btnGuardar.setEnabled(false);
+		pnlBienvenida.add(btnGuardar);
+
+		miLista=new JList();
+		for (int i=0;i<13;i++){
+			String tempLlenar=String.valueOf(frecuencia[i]);
+			lstModelActividades.addElement(tempLlenar);
+		}
+		miLista.setModel(lstModelActividades);
+		miLista.setBounds(10,10,100,100);
+		miLista.setVisible(true);
+		pnlBienvenida.add(miLista);
+
 	}
 
 	public class Listener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			Object fuente=e.getSource();
 			if (fuente==btnOn){
-				Carro miCarro=new Carro();
-				if (miCarro.getEncendido()==true){
+				miCarro.ON_OFF();
+				a=miCarro.getEncendido();
+				if (a==true){
 					btnBajar.setEnabled(true);
 					btnSubir.setEnabled(true);
 					btnFm.setEnabled(true);
+					btnGuardar.setEnabled(true);
 				}
 				else{
 					btnBajar.setEnabled(false);
 					btnSubir.setEnabled(false);
 					btnFm.setEnabled(false);
-				}			
-
+					btnGuardar.setEnabled(false);
+				}				
+			}
+			else if(fuente==btnGuardar){
+				String tempStringFrecuencia=txtFrecuenciaActual.getText();
+				String tempPosicion=cbxFrecuencias.getSelectedItem().toString();
+				double tempValor=Double.parseDouble(tempStringFrecuencia);
+				int tempIntPosicion=Integer.parseInt(tempPosicion);
+				frecuencia[tempIntPosicion]=tempValor;
 			}
 		}
 	}
