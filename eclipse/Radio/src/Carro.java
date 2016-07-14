@@ -33,7 +33,7 @@ public class Carro implements Radio {
 		// TODO Auto-generated method stub
 		if (subirBajar=true)
 			estacionActual+=0.3;
-		else
+		else if(subirBajar==false)
 			estacionActual-=0.3;
 	}
 

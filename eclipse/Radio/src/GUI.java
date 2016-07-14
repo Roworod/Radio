@@ -12,7 +12,7 @@ import java.awt.event.FocusEvent;
 public class GUI{
 	private JPanel pnlBienvenida;
 	private JFrame miFrame;
-	private JButton btnOn, btnFm, btnGuardar, btnSubir, btnBajar;
+	private JButton btnOn, btnFm, btnGuardar, btnSubir, btnBajar, btnCargar;
 	private JTextField txtFrecuenciaActual;
 	private JComboBox cbxFrecuencias;
 	private boolean a;
@@ -57,7 +57,8 @@ public class GUI{
 		pnlBienvenida.add(btnFm);
 
 		txtFrecuenciaActual= new JTextField();
-		txtFrecuenciaActual.setText("89.7");
+		String frecuenciaRadio= Double.toString(miCarro.getEmisora());
+		txtFrecuenciaActual.setText(frecuenciaRadio);
 		txtFrecuenciaActual.setEditable(false);
 		txtFrecuenciaActual.setBounds(100,10,200,20);
 		txtFrecuenciaActual.setVisible(true);
@@ -83,10 +84,17 @@ public class GUI{
 		pnlBienvenida.add(cbxFrecuencias);
 
 		btnGuardar=new JButton("Guardar");
-		btnGuardar.setBounds(10,200,75,30);
+		btnGuardar.setBounds(10,200,125,30);
 		btnGuardar.addActionListener(miListener);
 		btnGuardar.setEnabled(false);
 		pnlBienvenida.add(btnGuardar);
+
+		btnCargar=new JButton("Cargar");
+		btnGuardar.setBounds(10,200,125,30);
+		btnCargar.addActionListener(miListener);
+		btnCargar.setVisible(true);
+		btnCargar.setEnabled(false);
+		pnlBienvenida.add(btnCargar);
 
 		miLista=new JList();
 		for (int i=0;i<13;i++){
@@ -111,20 +119,46 @@ public class GUI{
 					btnSubir.setEnabled(true);
 					btnFm.setEnabled(true);
 					btnGuardar.setEnabled(true);
+					btnCargar.setEnabled(true);
 				}
 				else{
 					btnBajar.setEnabled(false);
 					btnSubir.setEnabled(false);
 					btnFm.setEnabled(false);
 					btnGuardar.setEnabled(false);
+					btnCargar.setEnabled(false);
 				}				
 			}
 			else if(fuente==btnGuardar){
-				String tempStringFrecuencia=txtFrecuenciaActual.getText();
-				String tempPosicion=cbxFrecuencias.getSelectedItem().toString();
-				double tempValor=Double.parseDouble(tempStringFrecuencia);
-				int tempIntPosicion=Integer.parseInt(tempPosicion);
-				frecuencia[tempIntPosicion]=tempValor;
+				//String tempStringFrecuencia=txtFrecuenciaActual.getText();
+				//String tempPosicion=cbxFrecuencias.getSelectedItem().toString();
+				//double tempValor=Double.parseDouble(tempStringFrecuencia);
+				//int tempIntPosicion=Integer.parseInt(tempPosicion);
+				//frecuencia[tempIntPosicion]=tempValor;
+				int tempInt=(Integer) cbxFrecuencias.getSelectedItem();
+				miCarro.Guardar_Emisora(tempInt);
+			}
+			else if (fuente==btnSubir){
+				miCarro.Cambio_de_Emisora(false);
+				String tempString=Double.toString(miCarro.getEmisora());
+				txtFrecuenciaActual.setText(tempString);
+			}
+			else if (fuente==btnBajar){
+				miCarro.Cambio_de_Emisora(true);
+				String tempString=Double.toString(miCarro.getEmisora());
+				txtFrecuenciaActual.setText(tempString);
+			}
+			else if (fuente==btnFm){
+				if(btnFm.getText()=="Fm")
+					btnFm.setText("Am");
+				else if(btnFm.getText()=="Am")
+					btnFm.setText("Fm");
+			}
+			else if(fuente==btnCargar){
+				int tempInt=(Integer) cbxFrecuencias.getSelectedItem();
+				miCarro.Seleccionar_emisora_guardada(tempInt);
+				String b=Double.toString(miCarro.getEmisora()); 
+				txtFrecuenciaActual.setText(b);
 			}
 		}
 	}
